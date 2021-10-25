@@ -13,6 +13,14 @@ const initialState = {
   form: { name: '', description: '' }
 }
 
+// Creating the styles for the components for this app
+const styles = {
+  container: {padding: 20},
+  input: {marginBottom: 10},
+  item: { textAlign: 'left' },
+  p: { color: '#1890ff' }
+}
+
 function reducer(state, action) {
   switch(action.type) {
     case 'SET_NOTES':
