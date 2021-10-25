@@ -48,6 +48,18 @@ export default function App() {
     fetchNotes()
   }, []);
 
+  // defining renderItem
+  function renderItem(Item) {
+    return (
+      <List.Item style={styles.item}>
+        <List.Item.Meta
+          title={item.name}
+          description={item.description}
+        />
+      </List.Item>
+    )
+  }
+
   return (
     //return the main UI for the component
     <div style={StyleSheet.container}>
