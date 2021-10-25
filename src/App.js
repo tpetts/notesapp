@@ -61,8 +61,8 @@ export default function App() {
     return (
       <List.Item style={styles.item}>
         <List.Item.Meta
-          title={item.name}
-          description={item.description}
+          title={Item.name}
+          description={Item.description}
         />
       </List.Item>
     )
