@@ -24,7 +24,11 @@ function reducer(state, action) {
   }
 }
 
-function App() {
+export default function App() {
+
+  // update the main App function to create the state and dispatch variables by calling useReducer and passing in the reducer and initialState:
+  const [state, dispatch] = useReducer(reducer, initialState)
+
   return (
     <div className="App">
       <header className="App-header">
@@ -45,4 +49,4 @@ function App() {
   );
 }
 
-export default App;
+// export default App;
