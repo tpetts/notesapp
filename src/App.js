@@ -29,6 +29,20 @@ export default function App() {
   // update the main App function to create the state and dispatch variables by calling useReducer and passing in the reducer and initialState:
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  // create a fetchNotes function (in the main App function) that will call the AppSync API and set the notes array once the API call is successful:
+
+  async function fetchNotes() {
+    try {
+      const notesData = await API.graphql({
+        query: listNotes
+      })
+      dispatch({ type: 'SET_NOTES', notes: notesData.data.listNotes.items })
+    } catch (err) {
+      console.log('error: ', err)
+      dispatch({ type: 'ERROR' })
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
