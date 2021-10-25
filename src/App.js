@@ -49,8 +49,16 @@ export default function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
+    //return the main UI for the component
+    <div style={StyleSheet.container}>
+      <List 
+        loading={state.loading}
+        dataSource={state.notes}
+        renderItem={renderItem}
+      />
+
+
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -63,7 +71,7 @@ export default function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> */}
     </div>
   );
 }
