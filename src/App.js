@@ -43,6 +43,11 @@ export default function App() {
     }
   }
 
+  // Now, invoke the fetchNotes function by implementing the useEffect hook (in the main App function):
+  useEffect(() => {
+    fetchNotes()
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
