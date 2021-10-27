@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import React, {useEffect, useReducer} from 'react';
 import { API } from 'aws-amplify';
@@ -28,32 +28,33 @@ function reducer(state, action) {
     case 'ERROR':
       return { ...state, loading: false, error: true }
     default:
-      return state
+      return { ...state};
   }
-}
+};
 
 export default function App() {
+  // const initialState = { notes: [] };
 
   // update the main App function to create the state and dispatch variables by calling useReducer and passing in the reducer and initialState:
   const [state, dispatch] = useReducer(reducer, initialState)
 
   // create a fetchNotes function (in the main App function) that will call the AppSync API and set the notes array once the API call is successful:
 
-  async function fetchNotes() {
+  const fetchNotes = async() => {
     try {
       const notesData = await API.graphql({
         query: listNotes
-      })
-      dispatch({ type: 'SET_NOTES', notes: notesData.data.listNotes.items })
+      });
+      dispatch({ type: 'SET_NOTES', notes: notesData.data.listNotes.items });
     } catch (err) {
-      console.log('error: ', err)
-      dispatch({ type: 'ERROR' })
+      console.log(err);
+      dispatch({ type: 'ERROR' });
     }
-  }
+  };
 
   // Now, invoke the fetchNotes function by implementing the useEffect hook (in the main App function):
   useEffect(() => {
-    fetchNotes()
+    fetchNotes();
   }, []);
 
   // defining renderItem
@@ -66,11 +67,11 @@ export default function App() {
         />
       </List.Item>
     )
-  }
+  };
 
   return (
     //return the main UI for the component
-    <div style={StyleSheet.container}>
+    <div style={styles.container}>
       <List 
         loading={state.loading}
         dataSource={state.notes}
