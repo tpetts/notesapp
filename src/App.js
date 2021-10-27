@@ -93,8 +93,6 @@ export default function App() {
   // defining renderItem
   function renderItem(Item) {
     return (
-
-      
       <List.Item style={styles.item}>
         <List.Item.Meta
           title={Item.name}
@@ -107,6 +105,28 @@ export default function App() {
   return (
     //return the main UI for the component
     <div style={styles.container}>
+
+      <Input
+        onChange={onChange}
+        value={state.form.name}
+        placeholder="Note Name"
+        name='name'
+        style={styles.input}
+      />
+      <Input
+        onChange={onChange}
+        value={state.form.description}
+        placeholder="Note description"
+        name='description'
+        style={styles.input}
+      />
+      <Button
+        onClick={createNote}
+        type="primary"
+      >
+        Create Note
+      </Button>
+      
       <List 
         loading={state.loading}
         dataSource={state.notes}
