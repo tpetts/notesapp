@@ -8,6 +8,8 @@ import { v4 as uuid } from 'uuid';
 import { listNotes } from './graphql/queries';
 import { createNote as CreateNote } from './graphql/mutations';
 
+const CLIENT_ID =  uuid();
+
 const initialState = {
   notes: [],
   loading: true,
