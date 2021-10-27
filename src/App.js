@@ -62,6 +62,25 @@ export default function App() {
     }
   };
 
+  const createNote = async() => {
+    const { form } = state
+    if (!form.name || !form.description) {
+       return alert('please enter a name and description')
+    }
+    const note = { ...form, clientId: CLIENT_ID, completed: false, id: uuid() }
+    dispatch({ type: 'ADD_NOTE', note })
+    dispatch({ type: 'RESET_FORM' })
+    try {
+      await API.graphql({
+        query: CreateNote,
+        variables: { input: note }
+      })
+      console.log('successfully created note!')
+    } catch (err) {
+      console.log("error: ", err)
+    }
+  }
+
   // Now, invoke the fetchNotes function by implementing the useEffect hook (in the main App function):
   useEffect(() => {
     fetchNotes();
