@@ -29,6 +29,12 @@ function reducer(state, action) {
   switch(action.type) {
     case 'SET_NOTES':
       return { ...state, notes: action.notes, loading: false }
+    case 'ADD_NOTE':
+      return { ...state, notes: [action.note, ...state.notes]}
+    case 'RESET_FORM':
+      return { ...state, form: initialState.form }
+    case 'SET_INPUT':
+      return { ...state, form: { ...state.form, [action.name]: action.value } }
     case 'ERROR':
       return { ...state, loading: false, error: true }
     default:
