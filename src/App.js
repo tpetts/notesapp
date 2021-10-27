@@ -81,6 +81,10 @@ export default function App() {
     }
   }
 
+  function onChange(e) {
+    dispatch({ type: 'SET_INPUT', name: e.target.name, value: e.target.value })
+  }
+
   // Now, invoke the fetchNotes function by implementing the useEffect hook (in the main App function):
   useEffect(() => {
     fetchNotes();
@@ -89,6 +93,8 @@ export default function App() {
   // defining renderItem
   function renderItem(Item) {
     return (
+
+      
       <List.Item style={styles.item}>
         <List.Item.Meta
           title={Item.name}
