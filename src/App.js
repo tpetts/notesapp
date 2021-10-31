@@ -114,7 +114,7 @@ export default function App() {
       })
       console.log('note successfully updated!')
     } catch (err) {
-      console.log('error: ', err)
+      console.error(err)
     }
   };
 
