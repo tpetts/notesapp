@@ -12,6 +12,7 @@ import {
           updateNote as UpdateNote
         } from './graphql/mutations';
 import { onCreateNote } from './graphql/subscriptions';
+import { onDeleteNote } from './graphql/subscriptions';
 
 const CLIENT_ID =  uuid();
 
@@ -90,7 +91,8 @@ export default function App() {
     const index = state.notes.findIndex(n => n.id === id)
     const notes = [
       ...state.notes.slice(0, index), // filter vs slice
-      ...state.notes.slice(index + 1)];
+      ...state.notes.slice(index + 1)
+    ];
     dispatch({ type: 'SET_NOTES', notes })
     try {
       await API.graphql({
@@ -132,11 +134,29 @@ export default function App() {
       .subscribe({
         next: noteData => {
           const note = noteData.value.data.onCreateNote
+          // if its a note that I created, don't dispatch it
           if (CLIENT_ID === note.clientId) return
+          // dispatch = else condition
           dispatch({ type: 'ADD_NOTE', note })
         }
       })
+      
+
+    const deleteSubscription = API.graphql({
+      query: onDeleteNote
+    })
+
+      .subscribe({
+        next: noteData => {
+          const note = noteData.value.data.onDeleteNote
+          if (CLIENT_ID === note.clientId) return
+          dispatch({ type: 'SET_NOTE', note })
+        }
+      })
+
       return () => subscription.unsubscribe()
+
+
   }, []);
 
   // defining renderItem
