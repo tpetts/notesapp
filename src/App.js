@@ -169,14 +169,14 @@ export default function App() {
 
       .subscribe({
         next: noteData => {
-          const id = noteData.value.data.onDeleteNote.id
-          console.log(id);
+          const noteId = noteData.value.data.onDeleteNote.id
+          //console.log(id);
           //console.log(index);
           //console.log(notes);
         
           // need to update the user interface
-          //dispatch({ type: 'SET_NOTES', notes })
-          console.log("I made it into the next subscription on line 158!");
+          dispatch({ type: 'REMOVE_NOTE', id: noteId })
+          //console.log("I made it into the next subscription on line 158!");
         }
       })
 
