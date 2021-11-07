@@ -96,15 +96,7 @@ export default function App() {
   }
 
   const deleteNote = async({ id }) => {
-    // updating the frontend
-    const index = state.notes.findIndex(n => n.id === id)
-    const notes = [
-      ...state.notes.slice(0, index), // filter vs slice
-      ...state.notes.slice(index + 1)
-    ];
-    // updating the backend
-    dispatch({ type: 'SET_NOTES', notes })
-    try {
+      try {
       await API.graphql({
         query: DeleteNote,
         variables: { input: { id } }
