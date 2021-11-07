@@ -37,6 +37,13 @@ function reducer(state, action) {
       return { ...state, notes: action.notes, loading: false }
     case 'ADD_NOTE':
       return { ...state, notes: [action.note, ...state.notes]}
+    case 'REMOVE_NOTE':
+      const index = state.notes.findIndex(n => n.id === action.id)
+      const newNotes = [
+        ...state.notes.slice(0, index), // filter vs slice
+        ...state.notes.slice(index + 1)
+      ];
+      return { ...state, notes: newNotes }
     case 'RESET_FORM':
       return { ...state, form: initialState.form }
     case 'SET_INPUT':
@@ -88,11 +95,13 @@ export default function App() {
   }
 
   const deleteNote = async({ id }) => {
+    // updating the frontend
     const index = state.notes.findIndex(n => n.id === id)
     const notes = [
       ...state.notes.slice(0, index), // filter vs slice
       ...state.notes.slice(index + 1)
     ];
+    // updating the backend
     dispatch({ type: 'SET_NOTES', notes })
     try {
       await API.graphql({
@@ -128,12 +137,19 @@ export default function App() {
   // Now, invoke the fetchNotes function by implementing the useEffect hook (in the main App function):
   useEffect(() => {
     fetchNotes();
-    const subscription = API.graphql({
+
+
+
+
+    // onCreateNote subscription
+    const createSubscription = API.graphql({
       query: onCreateNote
     })
       .subscribe({
         next: noteData => {
           const note = noteData.value.data.onCreateNote
+          console.log(note);
+          console.log("I made it to line 138 !");
           // if its a note that I created, don't dispatch it
           if (CLIENT_ID === note.clientId) return
           // dispatch = else condition
@@ -142,6 +158,11 @@ export default function App() {
       })
       
 
+
+
+
+      // onDeleteNote subscription
+    // making a query to the graphql API
     const deleteSubscription = API.graphql({
       query: onDeleteNote
     })
@@ -149,15 +170,31 @@ export default function App() {
       .subscribe({
         next: noteData => {
           const note = noteData.value.data.onDeleteNote
+          console.log(note);
+
+          const index = state.notes.findIndex(n => n.noteData === n.noteData)
+          const notes = [
+            ...state.notes.filter(0, index), // filter vs slice
+            ...state.notes.filter(index + 1)
+          ];
+          //console.log(index);
+          //console.log(notes);
+          
           if (CLIENT_ID === note.clientId) return
-          dispatch({ type: 'SET_NOTE', note })
+
+          // need to update the user interface
+          //dispatch({ type: 'SET_NOTES', notes })
+          console.log("I made it into the next subscription on line 158!");
         }
       })
 
-      return () => subscription.unsubscribe()
+      return () => {
+        createSubscription.unsubscribe()
+        deleteSubscription.unsubscribe()
+      }
 
 
-  }, []);
+  }, []); // closing useEffect statement
 
   // defining renderItem
   function renderItem(Item) {
