@@ -39,6 +39,7 @@ function reducer(state, action) {
       return { ...state, notes: [action.note, ...state.notes]}
     case 'REMOVE_NOTE':
       const index = state.notes.findIndex(n => n.id === action.id)
+      console.log(index);
       const newNotes = [
         ...state.notes.slice(0, index), // filter vs slice
         ...state.notes.slice(index + 1)
