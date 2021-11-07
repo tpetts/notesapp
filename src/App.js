@@ -171,17 +171,9 @@ export default function App() {
         next: noteData => {
           const note = noteData.value.data.onDeleteNote
           console.log(note);
-
-          const index = state.notes.findIndex(n => n.noteData === n.noteData)
-          const notes = [
-            ...state.notes.filter(0, index), // filter vs slice
-            ...state.notes.filter(index + 1)
-          ];
           //console.log(index);
           //console.log(notes);
-          
-          if (CLIENT_ID === note.clientId) return
-
+        
           // need to update the user interface
           //dispatch({ type: 'SET_NOTES', notes })
           console.log("I made it into the next subscription on line 158!");
