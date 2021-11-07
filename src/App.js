@@ -39,7 +39,7 @@ function reducer(state, action) {
       return { ...state, notes: [action.note, ...state.notes]}
     case 'REMOVE_NOTE':
       const index = state.notes.findIndex(n => n.id === action.id)
-      console.log(index);
+      //console.log(index);
       const newNotes = [
         ...state.notes.slice(0, index), // filter vs slice
         ...state.notes.slice(index + 1)
@@ -141,8 +141,8 @@ export default function App() {
       .subscribe({
         next: noteData => {
           const note = noteData.value.data.onCreateNote
-          console.log(note);
-          console.log("I made it to line 138 !");
+          //console.log(note);
+          //console.log("I made it to line 138 !");
           // if its a note that I created, don't dispatch it
           if (CLIENT_ID === note.clientId) return
           // dispatch = else condition
