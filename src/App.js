@@ -169,8 +169,8 @@ export default function App() {
 
       .subscribe({
         next: noteData => {
-          const note = noteData.value.data.onDeleteNote
-          console.log(note);
+          const id = noteData.value.data.onDeleteNote.id
+          console.log(id);
           //console.log(index);
           //console.log(notes);
         
