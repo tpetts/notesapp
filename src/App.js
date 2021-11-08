@@ -13,6 +13,7 @@ import {
         } from './graphql/mutations';
 import { onCreateNote } from './graphql/subscriptions';
 import { onDeleteNote } from './graphql/subscriptions';
+import { onUpdateNote } from './graphql/subscriptions';
 
 const CLIENT_ID =  uuid();
 
@@ -35,6 +36,19 @@ function reducer(state, action) {
   switch(action.type) {
     case 'SET_NOTES':
       return { ...state, notes: action.notes, loading: false }
+    case 'UPDATE_NOTES':
+      const updateIndex = state.notes.findIndex(n => n.id === action.id)
+
+
+      // work through understanding what each line does
+      const notes = [...state.notes]
+      console.log(notes);
+      notes[updateIndex].completed = !notes.completed
+      return { ...state, notes: action.notes, loading: false }
+
+
+
+
     case 'ADD_NOTE':
       return { ...state, notes: [action.note, ...state.notes]}
     case 'REMOVE_NOTE':
@@ -106,16 +120,22 @@ export default function App() {
         console.error(err)
     }
   };
-
+  // note being passed to updateNote to be scrutinized in the index below
   const updateNote = async(note) => {
+    // work through each of these to find out what they do
+
+    // find the index of the note we are messing with by comparing the note id to the current list of notes
     const index = state.notes.findIndex(n => n.id === note.id)
+    // create variable called notes, assign the value of an array that is spreading in all other current notes
     const notes = [...state.notes]
+    // take the index of the new variable notes from above and interrogate if it is marked completed or not completed
     notes[index].completed = !note.completed
+    // call the reducer of SET_NOTES, and pass it the changed notes.
     dispatch({ type: 'SET_NOTES', notes})
     try {
       await API.graphql({
         query: UpdateNote,
-        variables: { input: { id: note.id, completed: notes[index].completed } }
+        //variables: { input: { id: note.id, completed: notes[index].completed } }
       })
       console.log('note successfully updated!')
     } catch (err) {
@@ -151,9 +171,6 @@ export default function App() {
       })
       
 
-
-
-
       // onDeleteNote subscription
     // making a query to the graphql API
     const deleteSubscription = API.graphql({
@@ -173,9 +190,23 @@ export default function App() {
         }
       })
 
+      const updateSubscription = API.graphql({
+        query: onUpdateNote
+      })
+
+        .subscribe({
+          next: noteData => {
+            const noteCompleted = noteData.value.data.onUpdateNote.completed
+
+            dispatch({ type: 'UPDATE_NOTES' , completed: noteCompleted})
+          }
+        })
+
       return () => {
         createSubscription.unsubscribe()
         deleteSubscription.unsubscribe()
+        updateSubscription.unsubscribe()
+
       }
 
 
