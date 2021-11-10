@@ -36,15 +36,36 @@ function reducer(state, action) {
   switch(action.type) {
     case 'SET_NOTES':
       return { ...state, notes: action.notes, loading: false }
+
+
     case 'UPDATE_NOTES':
-      const updateIndex = state.notes.findIndex(n => n.id === action.id)
-
-
-      // work through understanding what each line does
-      const notes = [...state.notes]
-      console.log(notes);
-      notes[updateIndex].completed = !notes.completed
-      return { ...state, notes: action.notes, loading: false }
+      /**
+       * Create a new constant called updateIndex and assign it a value that will
+       * take the current state of the notes listed, and find the index by the id 
+       * property of the note on the page and check to see if the note's id is equal 
+       * in both value and type to the action.id of the reducer function.
+       */
+      const updateIndex = state.notes.findIndex(n => n.id === action.updatedNote)
+      console.log(updateIndex);
+      console.log(action.updatedNote);
+      /**  
+       * The notes that the user is seeing on the page
+       */
+      const updatedNotes = [...state.notes]
+      console.log(updatedNotes);
+      // Show me what the notes constant is holding in the console
+      //console.log(updatedNotes);
+      /**
+       * setting the note at index(...xyz) to the opposite of what it was before
+       */
+      updatedNotes[updateIndex].completed = !updatedNotes[updateIndex].completed
+      
+      /**
+       * Return all the previous notes, including the current notes and...
+       * perform the action on the active note, while the page isn't loading.
+       */
+      return { ...state, notes: updatedNotes, loading: false }
+      // end of UPDATE_NOTES case
 
 
 
@@ -130,14 +151,20 @@ export default function App() {
     const notes = [...state.notes]
     // take the index of the new variable notes from above and interrogate if it is marked completed or not completed
     notes[index].completed = !note.completed
-    // call the reducer of SET_NOTES, and pass it the changed notes.
+    // call the reducer of SET_NOTES, and pass it the newly changed notes from 2 lines above
     dispatch({ type: 'SET_NOTES', notes})
+    // try executing this try statement, it should work
     try {
+      // wait for the graphql API
       await API.graphql({
+        // make a query to UpdateNote,
         query: UpdateNote,
-        //variables: { input: { id: note.id, completed: notes[index].completed } }
+        // with the input variables of id, and completed notes index array
+        variables: { input: { id: note.id, completed: notes[index].completed } }
       })
+      // Show me that the note was updated in the console.
       console.log('note successfully updated!')
+      // otherwise, execute this catch statement because the try statement didn't work
     } catch (err) {
       console.error(err)
     }
@@ -196,9 +223,10 @@ export default function App() {
 
         .subscribe({
           next: noteData => {
-            const noteCompleted = noteData.value.data.onUpdateNote.completed
+            const noteId = noteData.value.data.onUpdateNote.id
+            console.log(noteId);
 
-            dispatch({ type: 'UPDATE_NOTES' , completed: noteCompleted})
+            dispatch({ type: 'UPDATE_NOTES' , updatedNote: noteId})
           }
         })
 
