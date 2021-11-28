@@ -19,6 +19,7 @@ const CLIENT_ID =  uuid();
 
 const initialState = {
   notes: [],
+  sorting: "AZ",
   loading: true,
   error: false,
   form: { name: '', description: '' }
@@ -32,7 +33,7 @@ const styles = {
   p: { color: '#1890ff' }
 }
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch(action.type) {
     case 'SET_NOTES':
       return { ...state, notes: action.notes, loading: false }
@@ -68,7 +69,16 @@ function reducer(state, action) {
       // end of UPDATE_NOTES case
 
 
-
+      case "SORTED_NOTE":
+        let newSortedNotes, sortedNotes;
+        if (state.sortedNote === "AZ") {
+          newSortedNotes = "ZA";
+          sortedNotes = state.notes.sort((a, b) => (a.name > b.name ? 1 : -1));
+        } else {
+          newSortedNotes = "AZ";
+          sortedNotes = state.notes.sort((a, b) => (a.name < b.name ? 1 : -1));
+        }
+        return { ...state, notes: sortedNotes, sortedNote: newSortedNotes };
 
     case 'ADD_NOTE':
       return { ...state, notes: [action.note, ...state.notes]}
@@ -140,6 +150,10 @@ export default function App() {
       } catch (err) {
         console.error(err)
     }
+  };
+
+  const sort = () => {
+    dispatch({ type: "SORTED_NOTE" });
   };
   // note being passed to updateNote to be scrutinized in the index below
   const updateNote = async(note) => {
@@ -264,6 +278,12 @@ export default function App() {
     //return the main UI for the component
     <div style={styles.container}>
 
+      <h1>Tia's To-Do:</h1>
+
+      <hr />
+      <br />
+      <h2>Add a new to-do task: </h2>
+
       <Input
         onChange={onChange}
         value={state.form.name}
@@ -284,6 +304,20 @@ export default function App() {
       >
         Create Note
       </Button>
+
+      <br />
+      <br />
+
+      <Button
+        onClick={sort}
+        type="primary"
+      >
+        Sort!
+      </Button>
+
+      <h3>
+        {state.notes.filter(x => x.completed === false).length} Tasks To Do / {state.notes.length} Total Tasks
+      </h3>
 
       <List 
         loading={state.loading}
