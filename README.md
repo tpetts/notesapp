@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+### `npm install -g @aws-amplify/cli`
+
+Needed for your machine to recognize amplify commands
+
 In the project directory, you can run:
 
 ### `npm start`
